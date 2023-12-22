@@ -5,7 +5,7 @@ import requests
 import re 
 import json
 
-#Function to create a service resource for ec2: 
+# This is a function that creates a service resource to establish a connection to ec2: 
 def resource_ec2(aws_access_key_id, aws_secret_access_key, aws_session_token):
     ec2_serviceresource =  boto3.resource('ec2',
                        'us-east-1',
@@ -15,7 +15,7 @@ def resource_ec2(aws_access_key_id, aws_secret_access_key, aws_session_token):
     
     return(ec2_serviceresource)
 
-#Function to create a service client for ec2
+# This is a function that creates a service client to establish a connection to ec2: 
 def client_ec2(aws_access_key_id, aws_secret_access_key, aws_session_token):
     ec2_serviceclient =  boto3.client('ec2',
                        'us-east-1',
@@ -26,12 +26,12 @@ def client_ec2(aws_access_key_id, aws_secret_access_key, aws_session_token):
     
     return(ec2_serviceclient)
 
-#Function to create and check a KeyPair : 
+# This is a function that creates and checks a keypair resource:  
 def create_keypair(key_pair_name, client):
     try:
         keypair = client.create_key_pair(KeyName=key_pair_name)
         print(keypair['KeyMaterial'])
-        with open('lab1_keypair.pem', 'w') as f:
+        with open('final_keypair.pem', 'w') as f:
             f.write(keypair['KeyMaterial'])
 
         return(key_pair_name)
@@ -40,14 +40,7 @@ def create_keypair(key_pair_name, client):
         print("\n\n============> Warning :  Keypair already created !!!!!!!<==================\n\n")
         return(key_pair_name)
 
-
-#---------------------------------------------To re check----------------------------------------------
-'Function to create a new vpc (Maybe no need for this, just use default vpc)'
-def create_vpc(CidrBlock,resource):
-   VPC_Id=resource.create_vpc(CidrBlock=CidrBlock).id
-   return VPC_Id
-
-'Function to create security group (Maybe no need for this, just use get securty group of default vpc)'
+# This is a function that creates a security group:  
 def create_security_group(Description,Groupe_name,vpc_id,resource):
     Security_group_ID=resource.create_security_group(
         Description=Description,
@@ -83,10 +76,9 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
     ) 
     return Security_group_ID
 
-#------------------------------------------------End----------------------------------------------------
 
-
-#Function to create ec2 instances :  The function returns a list containing the [id of instance,public_ip_address]
+#This is a function that creates ec2 instances
+#The function returns a list containing the [id of instance,public_ip_address]
 
 def create_instance_ec2(num_instances,ami_id,
     instance_type,key_pair_name,ec2_serviceresource,security_group_id,Availabilityzons,instance_function,user_data):
@@ -142,22 +134,3 @@ def update_orchestrator_sh(ud_orchestrator):
     with open('flask_orchestrator.sh', 'w') as file:
         file.write(ud_orchestrator)
     return(print("\n Updated flask_orchestrator with the new containers ip "))
-
-#Function to automatically update the ip of the workers in the test.json file
-def update_test_json(workers_m4):
-    # Modify the file test.json en fonction pour modifier les IP
-    with open("test.json","r") as f:
-            data=json.load(f)
-
-    # Modify the ip in the test.json
-    container_count = 0
-    for i in range(len(workers_m4)):
-        # Get one worker and map it to two containers with different ports :port 5000 and 5001
-        for _ in range(2):
-            container_count += 1
-            container_id = "container" + str(container_count)
-            data[container_id]["ip"]=workers_m4[i][1]
-    with open ("test.json","w") as f:
-        json.dump(data,f)
-    
-    return(print("\n\n json file updated successfully \n\n"))
