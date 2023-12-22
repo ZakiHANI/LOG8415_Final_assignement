@@ -1,8 +1,9 @@
 #! /usr/bin/bash
 
 deploy_cluster="/opt/mysqlcluster/deploy"
+5545150Yes
 cnf_cluster="/opt/mysqlcluster/deploy/conf"
-
+Yes2hellohello
 sudo mkdir -p "$deploy_cluster"
 cd "$deploy_cluster"
 sudo mkdir conf mysqld_data ndb_data 

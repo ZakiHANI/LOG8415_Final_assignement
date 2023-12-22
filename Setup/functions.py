@@ -4,6 +4,7 @@ import time
 import requests
 import re 
 import json
+import fileinput
 
 # This is a function that creates a service resource to establish a connection to ec2: 
 def resource_ec2(aws_access_key_id, aws_secret_access_key, aws_session_token):
@@ -117,10 +118,19 @@ def create_instance_ec2(num_instances,ami_id,
 
 #Function to automatically update the ip addresses of msater and slaves in the mysql_config-master.sh file
 def ubdate_ip_addresss_master(master_config_file,line_numbers,new_lines):
+    # with fileinput.FileInput(master_config_file, inplace=True) as f:
+    #         for i, ligne in enumerate(f, start=1):
+    #             for j in line_numbers:
+    #                 if i == 5:
+    #                 print(nouvelle_valeur)
+    #             else:
+    #                 print(ligne, end='')
+    
     with open(master_config_file,"r") as f:
             config_lines=f.readlines()
     for i in range(len(line_numbers)):
-        config_lines[line_numbers[i]]=new_lines[i]
+        config_lines[line_numbers[i]]=new_lines[i]+'\n'
+        #config_lines.insert(line_numbers[i],new_lines[i])
     
     with open(master_config_file, 'w') as f:
         f.writelines(config_lines)
