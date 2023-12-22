@@ -1,6 +1,7 @@
 import configparser
 import boto3
 from functions import *
+import paramiko
 import base64
 import os
 import json
@@ -98,9 +99,72 @@ if __name__ == '__main__':
     print("\n slaves created successfully with installation of sysbench and mysql")
 
 
-    #--------------------------------------Config mysql on master and slaves ------------------------------------------------------------
+    #--------------------------------------Config mysql on master ------------------------------------------------------------
+    print(master_t2)
+    print("\n Configuration of mysql on master....")
+    publicIpAddress_master=master_t2[0][1]
+    ssh_master = paramiko.SSHClient()
+    ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    key_private_master = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
+    ssh_master.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+    in_,out_,err_=ssh_master.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_config_master.sh')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    time.sleep(50)
+    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_user.sql")
+    print('out_:', out_.read())
+    print('err_:', err_.read())
 
-    #--------------------------------------Installing sakila on master and slaves ------------------------------------------------------------
+    print("\n mysql config on master has been made successfully....")
+
+
+    #--------------------------------------Config mysql on slaves ------------------------------------------------------------
+    print("\n Configuration of mysql on slaves....")
+    for i in range (3):
+        publicIpAddress_slave=slaves_t2[i][1]
+        ssh_slave = paramiko.SSHClient()
+        ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key_private_slave = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+        ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_master)
+        ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+        in_,out_,err_=ssh_slave.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_config_slaves.sh')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+
+    print("\n mysql configs on slaves has been made successfully....")
+    #--------------------------------------Installing sakila on master  ------------------------------------------------------------
+    print("\n Installation of sakila on master....")
+
+    ssh_master = paramiko.SSHClient()
+    ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    key_private_master = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
+    ssh_master.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+    in_,out_,err_=ssh_master.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\sakila_master_slaves.sh')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    print("\n Sakila installation on master has been made successfully....")
+
+
+    #--------------------------------------Installing sakila on slaves ------------------------------------------------------------
+    print("\n Installation of sakila on slaves....")
+
+    for i in range (3):
+        publicIpAddress_slave=slaves_t2[i][1]
+        ssh_slave = paramiko.SSHClient()
+        ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key_private_slave = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+        ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_master)
+        ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+        in_,out_,err_=ssh_slave.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\sakila_master_slaves.sh')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+
+    print("\n Sakila installation on slaves has been made successfully....")
 
 
     print('============================>SETUP ends')
+
+    
