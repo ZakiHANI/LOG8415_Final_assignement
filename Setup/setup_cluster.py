@@ -105,7 +105,8 @@ if __name__ == '__main__':
     line32='echo | cat hostname=ip-'+str(slaves_t2[1][1])+'.ec2.internal | sudo tee -a config.ini'
     line37='echo | cat hostname=ip-'+str(slaves_t2[2][1])+'.ec2.internal | sudo tee -a config.ini'
     ubdate_ip_addresss_master('mysql_config_master.sh',[18,27,32,37],[line18,line27,line32,line37])
-    ubdate_ip_addresss_master('mysql_config_master.sh',[1],['hello'])
+    from functions import *
+    ubdate_ip_addresss_master('mysql_config_master.sh',[3],['554'])
     print("\n Ip addresses of master and slaves are updated successfully in mysql config master file....")
     
 
