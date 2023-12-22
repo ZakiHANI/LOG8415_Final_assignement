@@ -115,22 +115,13 @@ def create_instance_ec2(num_instances,ami_id,
         print ('Instance: '+str(instance_function)+str(i+1),' having the Id: ',instance[0].id,'and having the ip',public_ip,' in Availability Zone: ', Availabilityzons[i], 'is created')
     return instances
 
-#Function to automatically update the ip of the workers in the flask_orchestrator.sh file
-def update_orchestrator_sh(ud_orchestrator):
-    ##Once the test json is updated (with new ip), modify automatically the IP in orchestrator_user data 
-    with open("test.json","r") as f:
-            data=json.load(f)
-    #get the modified IP
-    new_ip=str(data)
-    new_ip=new_ip.replace("'", '"')
-    #Get the content of the old test.json content in the previous user id
-    pattern = re.compile(r'test\.json\n(.*?)\nEOL', re.DOTALL)
-    result = re.search(pattern, ud_orchestrator)
-    old_ip = result.group(1)
+#Function to automatically update the ip addresses of msater and slaves in the mysql_config-master.sh file
+def ubdate_ip_addresss_master(master_config_file,line_numbers,new_lines):
+    with open(master_config_file,"r") as f:
+            config_lines=f.readlines()
+    for i in range(len(line_numbers)):
+        config_lines[line_numbers[i]]=new_lines[i]
+    
+    with open(master_config_file, 'w') as f:
+        f.writelines(config_lines)
 
-    #Replace the content of the updated ip in the ud_orchestrator
-    ud_orchestrator=ud_orchestrator.replace(old_ip,new_ip)
-    #Rewrite the updated file 
-    with open('flask_orchestrator.sh', 'w') as file:
-        file.write(ud_orchestrator)
-    return(print("\n Updated flask_orchestrator with the new containers ip "))
