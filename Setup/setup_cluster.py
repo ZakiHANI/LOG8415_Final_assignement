@@ -100,10 +100,10 @@ if __name__ == '__main__':
 
     #--------------------------------------Update ip addresses of master and slaves in mysql_config_master file------------------------------------------------------------
 
-    line18='echo | cat hostname=ip-'+str(master_t2[0][0])+'.ec2.internal | sudo tee -a config.ini'
-    line27='echo | cat hostname=ip-'+str(slaves_t2[0][0])+'.ec2.internal | sudo tee -a config.ini'
-    line32='echo | cat hostname=ip-'+str(slaves_t2[1][0])+'.ec2.internal | sudo tee -a config.ini'
-    line37='echo | cat hostname=ip-'+str(slaves_t2[2][0])+'.ec2.internal | sudo tee -a config.ini'
+    line18='echo | cat hostname=ip-'+str(master_t2[0][1])+'.ec2.internal | sudo tee -a config.ini'
+    line27='echo | cat hostname=ip-'+str(slaves_t2[0][1])+'.ec2.internal | sudo tee -a config.ini'
+    line32='echo | cat hostname=ip-'+str(slaves_t2[1][1])+'.ec2.internal | sudo tee -a config.ini'
+    line37='echo | cat hostname=ip-'+str(slaves_t2[2][1])+'.ec2.internal | sudo tee -a config.ini'
     ubdate_ip_addresss_master('mysql_config_master.sh',[18,27,32,37],[line18,line27,line32,line37])
     print("\n Ip addresses of master and slaves are updated successfully in mysql config master file....")
     
@@ -114,14 +114,14 @@ if __name__ == '__main__':
     publicIpAddress_master=master_t2[0][1]
     ssh_master = paramiko.SSHClient()
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    key_private_master = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
-    ssh_master.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
-    in_,out_,err_=ssh_master.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_config_master.sh')
+    ssh_master.exec_command('sudo apt-get update')
+    in_,out_,err_=ssh_master.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git && sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/mysql_config_master.sh')
     print('out_:', out_.read())
     print('err_:', err_.read())
     time.sleep(50)
-    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_user.sql")
+    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < /home/ubunto/LOG8415_Final_assignement/Setup/mysql_user.sql")
     print('out_:', out_.read())
     print('err_:', err_.read())
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     #     publicIpAddress_slave=slaves_t2[i][1]
     #     ssh_slave = paramiko.SSHClient()
     #     ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     key_private_slave = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    #     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     #     ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_master)
     #     ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
     #     in_,out_,err_=ssh_slave.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_config_slaves.sh')
@@ -147,10 +147,10 @@ if __name__ == '__main__':
 
     ssh_master = paramiko.SSHClient()
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    key_private_master = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
     ssh_master.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
-    in_,out_,err_=ssh_master.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\sakila_master_slaves.sh')
+    in_,out_,err_=ssh_master.exec_command('sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/sakila_master_slaves.sh')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     #     publicIpAddress_slave=slaves_t2[i][1]
     #     ssh_slave = paramiko.SSHClient()
     #     ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     key_private_slave = paramiko.RSAKey.from_private_key_file('finalkeyper.pem')
+    #     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     #     ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_master)
     #     ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
     #     in_,out_,err_=ssh_slave.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\sakila_master_slaves.sh')
