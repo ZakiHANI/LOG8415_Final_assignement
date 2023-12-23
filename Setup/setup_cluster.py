@@ -127,90 +127,78 @@ if __name__ == '__main__':
     ssh_master.exec_command('sudo apt-get update')
 
     # in_,out_,err_=ssh_master.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git && sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/mysql_config_master.sh')
-    ssh_master.exec_command('sudo deploy_cluster="/opt/mysqlcluster/deploy" && sudo cnf_cluster="/opt/mysqlcluster/deploy/conf"')
-    ssh_master.exec_command('sudo cd "$deploy_cluster" && sudo mkdir conf mysqld_data ndb_data && sudo cd "$conf_cluster"')
-    ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a my.cnf && echo | cat ndbcluster | sudo tee -a my.cnf')
-    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/mysqld_data | sudo tee -a my.cnf && echo | cat basedir=/opt/mysqlcluster/home/mysqlc | sudo tee -a my.cnf')
-    ssh_master.exec_command(' echo | cat port=3412 | sudo tee -a my.cnf && echo | cat [ndb_mgmd] | sudo tee -a config.ini')
+    in_,out_,err_=ssh_master.exec_command('sudo deploy_cluster="/opt/mysqlcluster/deploy" && sudo cnf_cluster="/opt/mysqlcluster/deploy/conf"')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command('sudo cd "$deploy_cluster" && sudo mkdir conf mysqld_data ndb_data && sudo cd "$conf_cluster"')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a my.cnf && echo | cat ndbcluster | sudo tee -a my.cnf')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/mysqld_data | sudo tee -a my.cnf && echo | cat basedir=/opt/mysqlcluster/home/mysqlc | sudo tee -a my.cnf')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat port=3412 | sudo tee -a my.cnf && echo | cat [ndb_mgmd] | sudo tee -a config.ini')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
         
     #Private dns name master
     master_pv_dns='echo | cat hostname='+str(master_t2[0][1])+' | sudo tee -a config.ini'
-    ssh_master.exec_command(master_pv_dns)
+    in_,out_,err_=ssh_master.exec_command(master_pv_dns)
+    print('out_:', out_.read())
+    print('err_:', err_.read())
 
-    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=1 | sudo tee -a config.ini')
-    ssh_master.exec_command(' echo | cat [ndbd default] | sudo tee -a config.ini && echo | cat noofreplicas=3 ')
-    ssh_master.exec_command(' echo | cat [ndbd] | sudo tee -a config.ini && echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini ')
+    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=1 | sudo tee -a config.ini')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat [ndbd default] | sudo tee -a config.ini && echo | cat noofreplicas=3 ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat [ndbd] | sudo tee -a config.ini && echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
     
     #Private dns name slave 1
     slave1_pv_dns='echo | cat hostname='+str(slaves_t2[0][1])+' | sudo tee -a config.ini'
-    ssh_master.exec_command(slave1_pv_dns)
-
-    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=2 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
-    
-    #Private dns name slave 2
-    # line31='echo | cat hostname='+str(slaves_t2[1][1])+' | sudo tee -a config.ini'
-    # line36='echo | cat hostname='+str(slaves_t2[2][1])+' | sudo tee -a config.ini'
-    ssh_master.exec_command(' echo | cat hostname=ip-172-31-88-166.ec2.internal | sudo tee -a config.ini ')
-    
-    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=3 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
-        
-    #Private dns name slave 3
-    ssh_master.exec_command(' echo | cat hostname=ip-172-31-86-179.ec2.internal | sudo tee -a config.ini')
-    
-    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=4 | sudo tee -a config.ini ')
-    ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a config.ini && echo | cat nodeid=50 | sudo tee -a config.ini ')
-
-
-
-
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-
-
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-
-    
-    
+    in_,out_,err_=ssh_master.exec_command(slave1_pv_dns)
     print('out_:', out_.read())
     print('err_:', err_.read())
+
+    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=2 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    #Private dns name slave 2
+    slave2_pv_dns='echo | cat hostname='+str(slaves_t2[1][1])+' | sudo tee -a config.ini'
+    in_,out_,err_=ssh_master.exec_command(slave2_pv_dns)
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    
+    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=3 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+
+    #Private dns name slave 3
+    slave3_pv_dns='echo | cat hostname='+str(slaves_t2[2][1])+' | sudo tee -a config.ini'
+    in_,out_,err_=ssh_master.exec_command(slave3_pv_dns)
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    
+    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=4 | sudo tee -a config.ini ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    in_,out_,err_=ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a config.ini && echo | cat nodeid=50 | sudo tee -a config.ini ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
     time.sleep(50)
     in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < /home/ubunto/LOG8415_Final_assignement/Setup/mysql_user.sql")
     print('out_:', out_.read())
     print('err_:', err_.read())
 
     print("\n mysql config on master has been made successfully....")
-
 
     # #--------------------------------------Config mysql on slaves ------------------------------------------------------------
     # print("\n Configuration of mysql on slaves....")
@@ -233,13 +221,13 @@ if __name__ == '__main__':
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
-    ssh_master.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
-    in_,out_,err_=ssh_master.exec_command('sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/sakila_master_slaves.sh')
+    ssh_master.exec_command('sudo apt-get update && sudo  mkdir home/sak && cd home/sak')
+    ssh_master.exec_command('sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz && sudo  tar xvf sakila-db.tar.gz')
+    in_,out_,err_=ssh_master.exec_command(' mysql SOURCE /home/sak/sakila-db/sakila-schema.sql &&  mysql SOURCE /home/sak/sakila-db/sakila-data.sql')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
     print("\n Sakila installation on master has been made successfully....")
-
 
     #--------------------------------------Installing sakila on slaves ------------------------------------------------------------
     # print("\n Installation of sakila on slaves....")
