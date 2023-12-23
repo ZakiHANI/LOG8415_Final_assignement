@@ -79,7 +79,7 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
 
 
 #This is a function that creates ec2 instances
-#The function returns a list containing the [id of instance,public_ip_address]
+#The function returns a list containing the [id of instance,private_dns_name,public_dns_name,public_ip]
 
 def create_instance_ec2(num_instances,ami_id,
     instance_type,key_pair_name,ec2_serviceresource,security_group_id,Availabilityzons,instance_function,user_data):
@@ -107,31 +107,48 @@ def create_instance_ec2(num_instances,ami_id,
                 ]
         )
 
-        #Wait until the instance is running to get its public_ip adress
+        #Wait until the instance is running to get its adresses
         instance[0].wait_until_running()
         instance[0].reload()
-        #Get the public ip address of the instance and add it in the return
+        #Get private_dns_name and public_dns_name of the instance and add it in the return
         public_ip = instance[0].public_ip_address
-        instances.append([instance[0].id,public_ip])
-        print ('Instance: '+str(instance_function)+str(i+1),' having the Id: ',instance[0].id,'and having the ip',public_ip,' in Availability Zone: ', Availabilityzons[i], 'is created')
+        private_dns_name=instance[0].private_dns_name
+        public_dns_name = instance[0].public_dns_name
+        instances.append([instance[0].id,private_dns_name,public_dns_name,public_ip])
+        print ('Instance: '+str(instance_function)+str(i+1),' having the Id: ',instance[0].id,', the private dns name:',private_dns_name,' and the public dns name: ', public_dns_name, 'is created')
     return instances
 
 #Function to automatically update the ip addresses of msater and slaves in the mysql_config-master.sh file
-def ubdate_ip_addresss_master(master_config_file,line_numbers,new_lines):
-    # with fileinput.FileInput(master_config_file, inplace=True) as f:
-    #         for i, ligne in enumerate(f, start=1):
-    #             for j in line_numbers:
-    #                 if i == 5:
-    #                 print(nouvelle_valeur)
-    #             else:
-    #                 print(ligne, end='')
+def ubdate_ip_addresss_master(master_config_file,nmbr_line,new_line):
+    try:
+        with open(master_config_file, 'r') as f:
+            lines = f.readlines()
+
+        if 1 <= nmbr_line <= len(lines):
+            del lines[nmbr_line]
+            lines[nmbr_line] = new_line
+            
+            # Write the modified content back to the file
+            with open(master_config_file, 'w') as f:
+                f.writelines(lines)
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
+    # # with fileinput.FileInput(master_config_file, inplace=True) as f:
+    # #         for i, ligne in enumerate(f, start=1):
+    # #             for j in line_numbers:
+    # #                 if i == 5:
+    # #                 print(nouvelle_valeur)
+    # #             else:
+    # #                 print(ligne, end='')
     
-    with open(master_config_file,"r") as f:
-            config_lines=f.readlines()
-    for i in range(len(line_numbers)):
-        config_lines[line_numbers[i]]=new_lines[i]+'\n'
-        #config_lines.insert(line_numbers[i],new_lines[i])
+    # with open(master_config_file,"r") as f:
+    #         config_lines=f.readlines()
+    # for i in range(len(line_numbers)):
+    #     config_lines[line_numbers[i]]=new_lines[i]+'\n'
+    #     #config_lines.insert(line_numbers[i],new_lines[i])
     
-    with open(master_config_file, 'w') as f:
-        f.writelines(config_lines)
+    # with open(master_config_file, 'w') as f:
+    #     f.writelines(config_lines)
 

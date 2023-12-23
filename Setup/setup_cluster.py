@@ -100,26 +100,108 @@ if __name__ == '__main__':
 
     #--------------------------------------Update ip addresses of master and slaves in mysql_config_master file------------------------------------------------------------
 
-    line18='echo | cat hostname=ip-'+str(master_t2[0][1])+'.ec2.internal | sudo tee -a config.ini'
-    line27='echo | cat hostname=ip-'+str(slaves_t2[0][1])+'.ec2.internal | sudo tee -a config.ini'
-    line32='echo | cat hostname=ip-'+str(slaves_t2[1][1])+'.ec2.internal | sudo tee -a config.ini'
-    line37='echo | cat hostname=ip-'+str(slaves_t2[2][1])+'.ec2.internal | sudo tee -a config.ini'
-    ubdate_ip_addresss_master('mysql_config_master.sh',[18,27,32,37],[line18,line27,line32,line37])
-    from functions import *
-    ubdate_ip_addresss_master('mysql_config_master.sh',[3],['554'])
+    # line17='echo | cat hostname='+str(master_t2[0][1])+' | sudo tee -a config.ini'
+    # line25='echo | cat hostname='+str(slaves_t2[0][1])+' | sudo tee -a config.ini'
+    # line31='echo | cat hostname='+str(slaves_t2[1][1])+' | sudo tee -a config.ini'
+    # line36='echo | cat hostname='+str(slaves_t2[2][1])+' | sudo tee -a config.ini'
+    # ubdate_ip_addresss_master('mysql_config_master.sh',16,line17)
+    # ubdate_ip_addresss_master('mysql_config_master.sh',24,line25)
+    # ubdate_ip_addresss_master('mysql_config_master.sh',30,line31)
+    # ubdate_ip_addresss_master('mysql_config_master.sh',35,line36)
+
+
+
+    # from functions import *
+    # ubdate_ip_addresss_master('mysql_config_master.sh',[8],['ppp'])
     print("\n Ip addresses of master and slaves are updated successfully in mysql config master file....")
     
 
     #--------------------------------------Config mysql on master ------------------------------------------------------------
     print(master_t2)
     print("\n Configuration of mysql on master....")
-    publicIpAddress_master=master_t2[0][1]
+    publicIpAddress_master=master_t2[0][3]
     ssh_master = paramiko.SSHClient()
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
     ssh_master.exec_command('sudo apt-get update')
-    in_,out_,err_=ssh_master.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git && sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/mysql_config_master.sh')
+
+    # in_,out_,err_=ssh_master.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git && sudo bash /home/ubunto/LOG8415_Final_assignement/Setup/mysql_config_master.sh')
+    ssh_master.exec_command('sudo deploy_cluster="/opt/mysqlcluster/deploy" && sudo cnf_cluster="/opt/mysqlcluster/deploy/conf"')
+    ssh_master.exec_command('sudo cd "$deploy_cluster" && sudo mkdir conf mysqld_data ndb_data && sudo cd "$conf_cluster"')
+    ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a my.cnf && echo | cat ndbcluster | sudo tee -a my.cnf')
+    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/mysqld_data | sudo tee -a my.cnf && echo | cat basedir=/opt/mysqlcluster/home/mysqlc | sudo tee -a my.cnf')
+    ssh_master.exec_command(' echo | cat port=3412 | sudo tee -a my.cnf && echo | cat [ndb_mgmd] | sudo tee -a config.ini')
+        
+    #Private dns name master
+    master_pv_dns='echo | cat hostname='+str(master_t2[0][1])+' | sudo tee -a config.ini'
+    ssh_master.exec_command(master_pv_dns)
+
+    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=1 | sudo tee -a config.ini')
+    ssh_master.exec_command(' echo | cat [ndbd default] | sudo tee -a config.ini && echo | cat noofreplicas=3 ')
+    ssh_master.exec_command(' echo | cat [ndbd] | sudo tee -a config.ini && echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini ')
+    
+    #Private dns name slave 1
+    slave1_pv_dns='echo | cat hostname='+str(slaves_t2[0][1])+' | sudo tee -a config.ini'
+    ssh_master.exec_command(slave1_pv_dns)
+
+    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=2 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
+    
+    #Private dns name slave 2
+    # line31='echo | cat hostname='+str(slaves_t2[1][1])+' | sudo tee -a config.ini'
+    # line36='echo | cat hostname='+str(slaves_t2[2][1])+' | sudo tee -a config.ini'
+    ssh_master.exec_command(' echo | cat hostname=ip-172-31-88-166.ec2.internal | sudo tee -a config.ini ')
+    
+    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=3 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
+        
+    #Private dns name slave 3
+    ssh_master.exec_command(' echo | cat hostname=ip-172-31-86-179.ec2.internal | sudo tee -a config.ini')
+    
+    ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=4 | sudo tee -a config.ini ')
+    ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a config.ini && echo | cat nodeid=50 | sudo tee -a config.ini ')
+
+
+
+
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+
+
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+
+    
+    
     print('out_:', out_.read())
     print('err_:', err_.read())
     time.sleep(50)
@@ -133,7 +215,7 @@ if __name__ == '__main__':
     # #--------------------------------------Config mysql on slaves ------------------------------------------------------------
     # print("\n Configuration of mysql on slaves....")
     # for i in range (3):
-    #     publicIpAddress_slave=slaves_t2[i][1]
+    #     publicIpAddress_slave=slaves_t2[i][3]
     #     ssh_slave = paramiko.SSHClient()
     #     ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     #     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
