@@ -160,6 +160,9 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
+    in_,out_,err_=ssh_master.exec_command('sudo apt-get install sysbench -y')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
 
     in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua prepare --db-driver=mysql --mysql-host=ip-172-31-17-142.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 ')
     print('out_:', out_.read())
@@ -185,6 +188,9 @@ if __name__ == '__main__':
         ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_slave)
         ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
         in_,out_,err_=ssh_slave.exec_command('sudo bash Final_Project\LOG8415_Final_assignement\Setup\sysbench_initiate_mysql.sh && sudo bash Final_Project\LOG8415_Final_assignement\Setup\config_mysql_slave.sh ')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+        in_,out_,err_=ssh_slave.exec_command('sudo apt-get install sysbench -y')
         print('out_:', out_.read())
         print('err_:', err_.read())
 

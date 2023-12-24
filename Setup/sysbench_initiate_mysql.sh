@@ -2,8 +2,7 @@
 
 # sudo service mysqld stop
 # sudo apt remove mysql-server mysql mysql-devel
-
-sudo apt-get install sysbench -y
+sudo apt-get upgrade
 
 sudo mkdir -p /opt/mysqlcluster/home
 cd /opt/mysqlcluster/home
