@@ -23,7 +23,7 @@ sudo apt-get update
 sudo apt-get -y install libncurses5
 
 deploy_cluster="/opt/mysqlcluster/deploy"
-cnf_cluster="/opt/mysqlcluster/deploy/conf"
+conf_cluster="/opt/mysqlcluster/deploy/conf"
 
 cd "$deploy_cluster"
 sudo mkdir conf mysqld_data ndb_data 
@@ -36,7 +36,7 @@ echo -e "basedir=/opt/mysqlcluster/home/mysqlc" | sudo tee -a my.cnf
 echo -e "port=3306" | sudo tee -a my.cnf
 
 echo -e "[ndb_mgmd]" | sudo tee -a config.ini
-echo -e "hostname=ip-172-31-27-13.ec2.internal" | sudo tee -a config.ini
+echo -e "hostname=ip-172-31-21-57.ec2.internal" | sudo tee -a config.ini
 echo -e "datadir=/opt/mysqlcluster/deploy/ndb_data" | sudo tee -a config.ini
 echo -e "nodeid=1" | sudo tee -a config.ini
 
@@ -45,17 +45,17 @@ echo -e "noofreplicas=3" | sudo tee -a config.ini
 echo -e "datadir=/opt/mysqlcluster/deploy/ndb_data" | sudo tee -a config.ini
 
 echo -e "[ndbd]" | sudo tee -a config.ini
-echo -e "hostname=ip-172-31-17-15.ec2.internal" | sudo tee -a config.ini
+echo -e "hostname=ip-172-31-25-67.ec2.internal" | sudo tee -a config.ini
 echo -e "datadir=/opt/mysqlcluster/deploy/ndb_data" | sudo tee -a config.ini
 echo -e "nodeid=2" | sudo tee -a config.ini
 
 echo -e "[ndbd]" | sudo tee -a config.ini
-echo -e "hostname=ip-172-31-19-179.ec2.internal" | sudo tee -a config.ini
+echo -e "hostname=ip-172-31-24-233.ec2.internal" | sudo tee -a config.ini
 echo -e "datadir=/opt/mysqlcluster/deploy/ndb_data" | sudo tee -a config.ini
 echo -e "nodeid=3" | sudo tee -a config.ini
 
 echo -e "[ndbd]" | sudo tee -a config.ini
-echo -e "hostname=ip-172-31-25-214.ec2.internal" | sudo tee -a config.ini
+echo -e "hostname=ip-172-31-19-210.ec2.internal" | sudo tee -a config.ini
 echo -e "datadir=/opt/mysqlcluster/deploy/ndb_data" | sudo tee -a config.ini
 echo -e "nodeid=4" | sudo tee -a config.ini
 
