@@ -136,19 +136,35 @@ if __name__ == '__main__':
     in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data && sudo chown -R root /opt/mysqlcluster/home/mysqlc")
     print('out_:', out_.read())
     print('err_:', err_.read())
-    
 
-    ssh_master2 = paramiko.SSHClient()
-    ssh_master2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    key_private_master2 = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
-    ssh_master2.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master2)
-    in_,out_,err_=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &")
+    in_,out_,err_=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/conf/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/ && sudo /opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &")
     print('out_:', out_.read())
     print('err_:', err_.read())
     
+
+    # ssh_master2 = paramiko.SSHClient()
+    # ssh_master2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    # key_private_master2 = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
+    # ssh_master2.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master2)
+    # in_,out_,err_=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/conf/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/ && sudo /opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &")
+    # print('out_:', out_.read())
+    # print('err_:', err_.read())
+    
     
     time.sleep(50)
-    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < LOG8415_Final_assignement/Setup/user.sql")
+    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sakila_master_slaves.sh')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua prepare --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua run --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 --threads=8 --time=20 --events=0 >  ')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua cleanup --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password ')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
