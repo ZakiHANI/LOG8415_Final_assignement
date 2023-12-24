@@ -133,9 +133,9 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/config_mysql_master.sh')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
+    # in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/config_mysql_master.sh')
+    # print('out_:', out_.read())
+    # print('err_:', err_.read())
 
     in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data && sudo chown -R root /opt/mysqlcluster/home/mysqlc")
     print('out_:', out_.read())
