@@ -33,10 +33,10 @@ echo | cat [mysqld] | sudo tee -a my.cnf
 echo | cat ndbcluster | sudo tee -a my.cnf
 echo | cat datadir=/opt/mysqlcluster/deploy/mysqld_data | sudo tee -a my.cnf
 echo | cat basedir=/opt/mysqlcluster/home/mysqlc | sudo tee -a my.cnf
-echo | cat port=3412 | sudo tee -a my.cnf
+echo | cat port=3306 | sudo tee -a my.cnf
 
 echo | cat [ndb_mgmd] | sudo tee -a config.ini
-echo | cat hostname=ip-172-31-21-67.ec2.internal | sudo tee -a config.ini
+echo | cat hostname=ip-172-31-19-213.ec2.internal | sudo tee -a config.ini
 echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini
 echo | cat nodeid=1 | sudo tee -a config.ini
 
@@ -45,17 +45,17 @@ echo | cat noofreplicas=3
 echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini
 
 echo | cat [ndbd] | sudo tee -a config.ini
-echo | cat hostname=ip-172-31-24-187.ec2.internal | sudo tee -a config.ini
+echo | cat hostname=ip-172-31-24-91.ec2.internal | sudo tee -a config.ini
 echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini
 echo | cat nodeid=2 | sudo tee -a config.ini
 
 echo | cat [ndbd] | sudo tee -a config.ini
-echo | cat hostname=ip-172-31-22-90.ec2.internal | sudo tee -a config.ini
+echo | cat hostname=ip-172-31-30-192.ec2.internal | sudo tee -a config.ini
 echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini
 echo | cat nodeid=3 | sudo tee -a config.ini
 
 echo | cat [ndbd] | sudo tee -a config.ini
-echo | cat hostname=ip-172-31-23-140.ec2.internal | sudo tee -a config.ini
+echo | cat hostname=ip-172-31-18-52.ec2.internal | sudo tee -a config.ini
 echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini
 echo | cat nodeid=4 | sudo tee -a config.ini
 
