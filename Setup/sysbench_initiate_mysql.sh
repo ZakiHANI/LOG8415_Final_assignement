@@ -36,7 +36,7 @@ port=3306' | sudo tee conf/my.cnf
 
 echo '
 [ndb_mgmd]
-hostname=ip-172-31-18-77.ec2.internal
+hostname=ip-172-31-27-47.ec2.internal
 datadir=/opt/mysqlcluster/deploy/ndb_data
 nodeid=1
 
@@ -45,18 +45,15 @@ noofreplicas=3
 datadir=/opt/mysqlcluster/deploy/ndb_data
 
 [ndbd]
-hostname=ip-172-31-18-39.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
+hostname=ip-172-31-27-63.ec2.internal
 nodeid=3
 
 [ndbd]
-hostname=ip-172-31-20-137.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
+hostname=ip-172-31-27-193.ec2.internal
 nodeid=4
 
 [ndbd]
-hostname=ip-172-31-31-165.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
+hostname=ip-172-31-30-169.ec2.internal
 nodeid=5
 
 [mysqld]
