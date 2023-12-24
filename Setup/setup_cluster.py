@@ -137,6 +137,25 @@ if __name__ == '__main__':
     # print('out_:', out_.read())
     # print('err_:', err_.read())
 
+    print("\n Configuration of mysql on slaves....")
+    for i in range (3):
+        publicIpAddress_slave=slaves_t2[i][3]
+        ssh_slave = paramiko.SSHClient()
+        ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
+        ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_slave)
+        in_,out_,err_=ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+        in_,out_,err_=ssh_slave.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_initiate_mysql.sh && sudo bash LOG8415_Final_assignement/Setup/config_mysql_slave.sh ')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+        in_,out_,err_=ssh_slave.exec_command('sudo apt-get install sysbench -y')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+
+    print("\n mysql configs on slaves has been made successfully....")
+
     in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data && sudo chown -R root /opt/mysqlcluster/home/mysqlc")
     print('out_:', out_.read())
     print('err_:', err_.read())
@@ -164,6 +183,7 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
+
     in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua prepare --db-driver=mysql --mysql-host=ip-172-31-17-142.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 ')
     print('out_:', out_.read())
     print('err_:', err_.read())
@@ -186,8 +206,10 @@ if __name__ == '__main__':
         ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
         ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_slave)
-        ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
-        in_,out_,err_=ssh_slave.exec_command('sudo bash Final_Project\LOG8415_Final_assignement\Setup\sysbench_initiate_mysql.sh && sudo bash Final_Project\LOG8415_Final_assignement\Setup\config_mysql_slave.sh ')
+        in_,out_,err_=ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
+        in_,out_,err_=ssh_slave.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_initiate_mysql.sh && sudo bash LOG8415_Final_assignement/Setup/config_mysql_slave.sh ')
         print('out_:', out_.read())
         print('err_:', err_.read())
         in_,out_,err_=ssh_slave.exec_command('sudo apt-get install sysbench -y')
