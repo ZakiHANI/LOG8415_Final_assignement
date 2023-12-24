@@ -134,7 +134,7 @@ if __name__ == '__main__':
     print('err_:', err_.read())
 
     time.sleep(50)
-    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < /LOG8415_Final_assignement/Setup/mysql_user.sql")
+    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < LOG8415_Final_assignement/Setup/user.sql")
     print('out_:', out_.read())
     print('err_:', err_.read())
 
