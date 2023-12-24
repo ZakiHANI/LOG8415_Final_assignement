@@ -132,11 +132,11 @@ if __name__ == '__main__':
     print('err_:', err_.read())
 
     
-    in_,out_,err_=ssh_standalone.exec_command('mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'ZAKARIA';"')
+    in_,out_,err_=ssh_standalone.exec_command('mysql -e "CREATE USER admin@localhost IDENTIFIED BY ZAKARIA;"')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('mysql -e "GRANT ALL PRIVILEGES on sakila.* TO 'admin'@'localhost';"')
+    in_,out_,err_=ssh_standalone.exec_command('mysql -e "GRANT ALL PRIVILEGES on sakila.* TO admin@localhost;"')
     print('out_:', out_.read())
     print('err_:', err_.read())
     
@@ -149,3 +149,4 @@ if __name__ == '__main__':
     print('err_:', err_.read())
     
     print('============================>Standalone SETUP ends')
+
