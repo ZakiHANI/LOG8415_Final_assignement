@@ -2,4 +2,5 @@
 ndbcluster
 datadir=/opt/mysqlcluster/deploy/mysqld_data
 basedir=/opt/mysqlcluster/home/mysqlc
+bind-address = 127.0.0.1
 port=3306

@@ -23,4 +23,4 @@ sudo mkdir mysqld_data
 sudo mkdir ndb_data
 cd conf
 echo | cat LOG8415_Final_assignement/Setup/mycnf | sudo tee -a my.cnf
-echo | cat LOG8415_Final_assignement/Setup/configini | sudo tee -a config.ini
+echo | cat LOG8415_Final_assignement/Setup/configini.txt | sudo tee -a config.ini
