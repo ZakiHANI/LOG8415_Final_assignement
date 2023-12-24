@@ -124,7 +124,7 @@ if __name__ == '__main__':
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
-    ssh_master.exec_command('sudo apt-get update')
+    ssh_master.exec_command('sudo apt-get update && sudo apt-get upgrade')
     in_,out_,err_=ssh_master.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
     print('out_:', out_.read())
     print('err_:', err_.read())
