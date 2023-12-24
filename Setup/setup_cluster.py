@@ -78,7 +78,7 @@ if __name__ == '__main__':
     
 
     #--------------------------------------Pass sysbench and mysqlinstallation script for master and slaves script into the user_data parameter ------------------------------
-    with open('sysbench_mysql_master_slaves.sh', 'r') as f :
+    with open('sysbench_initiate_mysql.sh', 'r') as f :
         sysbench_mysql_master_slaves = f.read()
 
     sysbench_mysql = str(sysbench_mysql_master_slaves)
@@ -129,7 +129,11 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
                                           
-    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_mysql_master_slaves.sh')
+    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_initiate_mysql.sh')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/config_mysql_master.sh')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
@@ -152,52 +156,53 @@ if __name__ == '__main__':
     
     
     time.sleep(50)
-    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sakila_master_slaves.sh')
+    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sakila_master.sh')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua prepare --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 ')
+
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua prepare --db-driver=mysql --mysql-host=ip-172-31-17-142.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 ')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua run --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 --threads=8 --time=20 --events=0 >  ')
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua run --db-driver=mysql --mysql-host=ip-172-31-17-142.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password --table-size=50000 --threads=8 --time=20 --events=0 >  ')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua cleanup --db-driver=mysql --mysql-host=ip-172-31-19-36.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password ')
+    in_,out_,err_=ssh_master.exec_command('sudo sysbench /usr/share/sysbench/oltp_read_write.lua cleanup --db-driver=mysql --mysql-host=ip-172-31-17-142.ec2.internal --mysql-db=sakila --mysql-user=root --mysql-password ')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
     print("\n mysql config on master has been made successfully....")
 
     # #--------------------------------------Config mysql on slaves ------------------------------------------------------------
-    # print("\n Configuration of mysql on slaves....")
-    # for i in range (3):
-    #     publicIpAddress_slave=slaves_t2[i][3]
-    #     ssh_slave = paramiko.SSHClient()
-    #     ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
-    #     ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_master)
-    #     ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
-    #     in_,out_,err_=ssh_slave.exec_command('sudo bash \home\ubunto\Final_Project\LOG8415_Final_assignement\Setup\mysql_config_slaves.sh')
-    #     print('out_:', out_.read())
-    #     print('err_:', err_.read())
+    print("\n Configuration of mysql on slaves....")
+    for i in range (3):
+        publicIpAddress_slave=slaves_t2[i][3]
+        ssh_slave = paramiko.SSHClient()
+        ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
+        ssh_slave.connect(hostname=publicIpAddress_slave,username='ubuntu', pkey=key_private_slave)
+        ssh_slave.exec_command('sudo apt-get update && sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
+        in_,out_,err_=ssh_slave.exec_command('sudo bash Final_Project\LOG8415_Final_assignement\Setup\sysbench_initiate_mysql.sh && sudo bash Final_Project\LOG8415_Final_assignement\Setup\config_mysql_slave.sh ')
+        print('out_:', out_.read())
+        print('err_:', err_.read())
 
-    # print("\n mysql configs on slaves has been made successfully....")
+    print("\n mysql configs on slaves has been made successfully....")
     #--------------------------------------Installing sakila on master  ------------------------------------------------------------
-    print("\n Installation of sakila on master....")
+    # print("\n Installation of sakila on master....")
 
-    ssh_master = paramiko.SSHClient()
-    ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
-    ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
-    ssh_master.exec_command('sudo apt-get update && sudo  mkdir home/sak && cd home/sak')
-    ssh_master.exec_command('sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz && sudo  tar xvf sakila-db.tar.gz')
-    in_,out_,err_=ssh_master.exec_command(' mysql SOURCE /home/sak/sakila-db/sakila-schema.sql &&  mysql SOURCE /home/sak/sakila-db/sakila-data.sql')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
+    # ssh_master = paramiko.SSHClient()
+    # ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    # key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
+    # ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
+    # ssh_master.exec_command('sudo apt-get update && sudo  mkdir home/sak && cd home/sak')
+    # ssh_master.exec_command('sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz && sudo  tar xvf sakila-db.tar.gz')
+    # in_,out_,err_=ssh_master.exec_command(' mysql SOURCE /home/sak/sakila-db/sakila-schema.sql &&  mysql SOURCE /home/sak/sakila-db/sakila-data.sql')
+    # print('out_:', out_.read())
+    # print('err_:', err_.read())
 
-    print("\n Sakila installation on master has been made successfully....")
+    # print("\n Sakila installation on master has been made successfully....")
 
     #--------------------------------------Installing sakila on slaves ------------------------------------------------------------
     # print("\n Installation of sakila on slaves....")
