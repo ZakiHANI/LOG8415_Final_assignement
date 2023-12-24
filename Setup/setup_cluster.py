@@ -133,6 +133,11 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
+    in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data")
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    
+
     ssh_master2 = paramiko.SSHClient()
     ssh_master2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_master2 = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
@@ -140,7 +145,11 @@ if __name__ == '__main__':
     in_,out_,err_=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &")
     print('out_:', out_.read())
     print('err_:', err_.read())
-
+    
+    in_,out_,err_=ssh_master.exec_command("sudo apt-get install mysql-server")
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+    
     time.sleep(50)
     in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < LOG8415_Final_assignement/Setup/user.sql")
     print('out_:', out_.read())
