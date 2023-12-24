@@ -133,7 +133,7 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data")
+    in_,out_,err_=ssh_master.exec_command("cd /opt/mysqlcluster/home/mysqlc && sudo scripts/mysql_install_db --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data && sudo chown -R root /opt/mysqlcluster/home/mysqlc")
     print('out_:', out_.read())
     print('err_:', err_.read())
     
@@ -146,9 +146,6 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
     
-    in_,out_,err_=ssh_master.exec_command("sudo apt-get install mysql-server")
-    print('out_:', out_.read())
-    print('err_:', err_.read())
     
     time.sleep(50)
     in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < LOG8415_Final_assignement/Setup/user.sql")
