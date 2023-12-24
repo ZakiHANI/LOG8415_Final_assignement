@@ -82,7 +82,7 @@ if __name__ == '__main__':
         sysbench_mysql_master_slaves = f.read()
 
     sysbench_mysql = str(sysbench_mysql_master_slaves)
-
+    sysbench_mysql=''
     #--------------------------------------Create Instances of master and slaves with installing sysbench and mysql on them ------------------------------------------------------------
 
     # Create master t2.micro instance:
