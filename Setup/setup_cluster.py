@@ -129,77 +129,12 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
                                           
-    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/mysql_config_master.sh')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command('sudo deploy_cluster="/opt/mysqlcluster/deploy" && sudo cnf_cluster="/opt/mysqlcluster/deploy/conf"')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command('sudo cd "/opt/mysqlcluster/deploy" && sudo mkdir conf mysqld_data ndb_data && sudo cd "/opt/mysqlcluster/deploy/conf"')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a my.cnf && echo | cat ndbcluster | sudo tee -a my.cnf')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/mysqld_data | sudo tee -a my.cnf && echo | cat basedir=/opt/mysqlcluster/home/mysqlc | sudo tee -a my.cnf')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat port=3412 | sudo tee -a my.cnf && echo | cat [ndb_mgmd] | sudo tee -a config.ini')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-        
-    #Private dns name master
-    master_pv_dns='echo | cat hostname='+str(master_t2[0][1])+' | sudo tee -a config.ini'
-    in_,out_,err_=ssh_master.exec_command(master_pv_dns)
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-
-    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=1 | sudo tee -a config.ini')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat [ndbd default] | sudo tee -a config.ini && echo | cat noofreplicas=3 ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat [ndbd] | sudo tee -a config.ini && echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    
-    #Private dns name slave 1
-    slave1_pv_dns='echo | cat hostname='+str(slaves_t2[0][1])+' | sudo tee -a config.ini'
-    in_,out_,err_=ssh_master.exec_command(slave1_pv_dns)
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-
-    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=2 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-
-    #Private dns name slave 2
-    slave2_pv_dns='echo | cat hostname='+str(slaves_t2[1][1])+' | sudo tee -a config.ini'
-    in_,out_,err_=ssh_master.exec_command(slave2_pv_dns)
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    
-    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=3 | sudo tee -a config.ini && echo | cat [ndbd] | sudo tee -a config.ini ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-
-
-    #Private dns name slave 3
-    slave3_pv_dns='echo | cat hostname='+str(slaves_t2[2][1])+' | sudo tee -a config.ini'
-    in_,out_,err_=ssh_master.exec_command(slave3_pv_dns)
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    
-    in_,out_,err_=ssh_master.exec_command(' echo | cat datadir=/opt/mysqlcluster/deploy/ndb_data | sudo tee -a config.ini && echo | cat nodeid=4 | sudo tee -a config.ini ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    in_,out_,err_=ssh_master.exec_command(' echo | cat [mysqld] | sudo tee -a config.ini && echo | cat nodeid=50 | sudo tee -a config.ini ')
+    in_,out_,err_=ssh_master.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_mysql_master_slaves.sh')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
     time.sleep(50)
-    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < /home/ubunto/LOG8415_Final_assignement/Setup/mysql_user.sql")
+    in_,out_,err_=ssh_master.exec_command("/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < /LOG8415_Final_assignement/Setup/mysql_user.sql")
     print('out_:', out_.read())
     print('err_:', err_.read())
 
