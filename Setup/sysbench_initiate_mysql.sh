@@ -23,5 +23,41 @@ sudo mkdir -p conf
 sudo mkdir -p mysqld_data
 sudo mkdir -p ndb_data
 sudo chmod +w ./conf
-echo | cat LOG8415_Final_assignement/Setup/mycnf | sudo tee conf/my.cnf
-echo | cat LOG8415_Final_assignement/Setup/configini.txt | sudo tee conf/config.ini
+
+echo ' 
+[mysqld]
+ndbcluster
+datadir=/opt/mysqlcluster/deploy/mysqld_data
+basedir=/opt/mysqlcluster/home/mysqlc
+port=3306' | sudo tee conf/my.cnf
+
+# cat LOG8415_Final_assignement/Setup/mycnf | sudo tee conf/my.cnf
+# cat LOG8415_Final_assignement/Setup/configini.txt | sudo tee conf/config.ini
+
+echo '
+[ndb_mgmd]
+hostname=ip-172-31-18-77.ec2.internal
+datadir=/opt/mysqlcluster/deploy/ndb_data
+nodeid=1
+
+[ndbd default]
+noofreplicas=3
+datadir=/opt/mysqlcluster/deploy/ndb_data
+
+[ndbd]
+hostname=ip-172-31-18-39.ec2.internal
+datadir=/opt/mysqlcluster/deploy/ndb_data
+nodeid=3
+
+[ndbd]
+hostname=ip-172-31-20-137.ec2.internal
+datadir=/opt/mysqlcluster/deploy/ndb_data
+nodeid=4
+
+[ndbd]
+hostname=ip-172-31-31-165.ec2.internal
+datadir=/opt/mysqlcluster/deploy/ndb_data
+nodeid=5
+
+[mysqld]
+nodeid=50' | sudo tee conf/config.ini
