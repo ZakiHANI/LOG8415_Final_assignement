@@ -96,26 +96,26 @@ if __name__ == '__main__':
     publicIpAddress_standalone=standalone_t2[0][3]
     ssh_standalone = paramiko.SSHClient()
     ssh_standalone.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    key_private_standalone = paramiko.RSAKey.from_private_key_file('final_kseypair.pem')
+    key_private_standalone = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_standalone.connect(hostname=publicIpAddress_standalone,username='ubuntu', pkey=key_private_standalone)
     
-    in_,out_,err_=ssh_standalone.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git ')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
+    # in_,out_,err_=ssh_standalone.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git ')
+    # print('out_:', out_.read())
+    # print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_mysql_sakila_standalone.sh')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
+    # in_,out_,err_=ssh_standalone.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_mysql_sakila_standalone.sh')
+    # print('out_:', out_.read())
+    # print('err_:', err_.read())
 
     in_,out_,err_=ssh_standalone.exec_command('sudo apt-get update -y')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('apt-get install mysql-server -y')
+    in_,out_,err_=ssh_standalone.exec_command('export DEBIAN_FRONTEND=noninteractive && sudo apt-get install mysql-server -y')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('apt-get install sysbench -y')
+    in_,out_,err_=ssh_standalone.exec_command('export DEBIAN_FRONTEND=noninteractive && sudo apt-get install sysbench -y')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
@@ -123,30 +123,29 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('mysql -u root -e "SOURCE /sakila-db/sakila-schema.sql;"')
+    in_,out_,err_=ssh_standalone.exec_command('sudo mysql -u root -e "SOURCE sakila-db/sakila-schema.sql;"')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('mysql -u root -e "SOURCE /sakila-db/sakila-data.sql;"')
+    in_,out_,err_=ssh_standalone.exec_command('sudo mysql -u root -e "SOURCE sakila-db/sakila-data.sql;"')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
+    in_, out_, err_ = ssh_standalone.exec_command('sudo mysql -e "CREATE USER \'admin\'@\'localhost\' IDENTIFIED BY \'ZAKARIA\';"')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
+
+    in_, out_, err_ = ssh_standalone.exec_command('sudo mysql -e "GRANT ALL PRIVILEGES ON sakila.* TO \'admin\'@\'localhost\';"')
+    print('out_:', out_.read())
+    print('err_:', err_.read())
     
-    in_,out_,err_=ssh_standalone.exec_command('mysql -e "CREATE USER admin@localhost IDENTIFIED BY ZAKARIA;"')
+    in_,out_,err_=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 /usr/share/sysbench/oltp_read_write.lua prepare')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('mysql -e "GRANT ALL PRIVILEGES on sakila.* TO admin@localhost;"')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-    
-    in_,out_,err_=ssh_standalone.exec_command('sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 /usr/share/sysbench/oltp_read_write.lua prepare')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
-
-    in_,out_,err_=ssh_standalone.exec_command('sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 --threads=8 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run > mysql-standalone-results')
-    print('out_:', out_.read())
-    print('err_:', err_.read())
+    in_,out_,err_=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 --threads=8 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run ')
+    print(out_.read())
+    print(err_.read())
     
     print('============================>Standalone SETUP ends')
 
