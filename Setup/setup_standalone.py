@@ -139,11 +139,11 @@ if __name__ == '__main__':
     print('out_:', out_.read())
     print('err_:', err_.read())
     
-    in_,out_,err_=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 /usr/share/sysbench/oltp_read_write.lua prepare')
+    in_,out_,err_=ssh_standalone.exec_command('sudo sysbench oltp_read_write --table-size=1000000 --mysql-db=sakila --mysql-user=admin prepare')
     print('out_:', out_.read())
     print('err_:', err_.read())
 
-    in_,out_,err_=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=admin --mysql_password=ZAKARIA --table-size=50000 --tables=10 --threads=8 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run ')
+    in_,out_,err_=ssh_standalone.exec_command('time sudo sysbench oltp_read_write --table-size=1000000 --threads=16 --max-requests=0 --mysql-db=sakila --mysql-user=admin run ')
     print(out_.read())
     print(err_.read())
     
