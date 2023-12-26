@@ -77,13 +77,7 @@ if __name__ == '__main__':
         security_group_id = (sg_dict.get("SecurityGroups")[0]).get("GroupId")
     
 
-    #--------------------------------------Pass sysbench and mysqlinstallation script for master and slaves script into the user_data parameter ------------------------------
-    with open('sysbench_initiate_mysql.sh', 'r') as f :
-        sysbench_mysql_master_slaves = f.read()
-
-    sysbench_mysql = str(sysbench_mysql_master_slaves)
-    sysbench_mysql=''
-    #--------------------------------------Create Instances of master and slaves with installing sysbench and mysql on them ------------------------------------------------------------
+    #--------------------------------------Create Instances of master and slaves ------------------------------------------------------------
 
     # Create master t2.micro instance:
     instance_type = "t2.micro"
