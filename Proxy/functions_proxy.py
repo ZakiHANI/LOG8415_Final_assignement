@@ -1,3 +1,4 @@
+import sys
 import boto3
 import paramiko
 import random
@@ -71,4 +72,23 @@ def proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master):
     #Remove requests.sql
     in3,out3,err3=ssh_selected_node.exec_command("sudo rm requests.sql")
 
+#Read the proxy mode given in the SSH command
+mode = sys.argv[1]
+#Reading the request
+request = open('/home/ubuntu/request.sql', mode="r", encoding="utf-8").readlines()[0]  
 
+publicIpAddress_master='172.31.24.243'
+dict_slaves_publicIpAddress={'slave-1':'172.31.30.207','slave-2':'172.31.23.68','slave-3':'172.31.24.170'}
+dict_nodes_publicIpAddress={'master':'172.31.24.243','slave-1':'172.31.30.207','slave-2':'172.31.23.68','slave-3':'172.31.24.170'}
+
+#execute the function of direct hit if we want to test the direct hit mode
+if mode=='direct hit':
+    proxy_direct_hit(publicIpAddress_master,request)
+
+#execute the function of random if we want to test the random mode
+if mode=='random':
+    proxy_random(dict_slaves_publicIpAddress,request,publicIpAddress_master)
+
+#execute the function of customize if we want to test the customize mode
+if mode=='customize':
+    proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master)
