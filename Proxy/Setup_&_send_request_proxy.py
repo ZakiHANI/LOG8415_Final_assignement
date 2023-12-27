@@ -17,7 +17,7 @@ with open(path+"/my_credentials.ini","r") as file_object:
     ami_id = config_object.get("ami","ami_id")
 
 
-print('============================>The begining of setup')
+print('============================>The begining of proxy setup')
 
 #--------------------------------------ec2 resource and client creations----------------------------------------
     
@@ -95,7 +95,6 @@ ssh_proxy.connect(hostname=publicIpAddress_proxy,username='ubuntu', pkey=key_pri
 #Clone my github repository
 in1,out1,err1=ssh_proxy.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git')
 in2,out2,err2=ssh_proxy.exec_command('sudo bash LOG8415_Final_assignement/Proxy/requirements.sh')
-in3,out3,err3=ssh_proxy.exec_command('sudo bash LOG8415_Final_assignement/Proxy/requirements.sh')
 
 while True:
     # Ask user to set the proxy mode to test
@@ -103,43 +102,43 @@ while True:
 
     if mode=='direct_hit':
         #-------> Test a write request
-        request_write = input("Plese give me the request you want to send (Write request)")
+        request_write = input("Please give me the request you want to send (Write request)")
         #request_write='INSERT INTO sakila.film (title, release_year, rental_rate) VALUES (Oppenheimer,2023,3.7);'
         #load request to the proxy
-        in_write,out_write,err_write=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_write) + "'" + ' >> /home/ubuntu/request.sql')
+        in_write,out_write,err_write=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_write) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
         print('The Output is:', out_write.read())
         #Execute functions_proxy.py code in the proxy with direct_hit mode
         commande_direct_hit = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
         in_dir,out_dir,err_dir=ssh_proxy.exec_command(commande_direct_hit)
         print('The Output is:', out_dir.read())
-        in_,out_,err_=ssh_proxy.exec_command("sudo rm request.sql")
+        in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
 
     if mode=='random':
         #-------> Test a read request
-        request_read = input("Plese give me the request you want to send (Read request)")
+        request_read = input("Please give me the request you want to send (Read request)")
         #request_read='SELECT first_name, last_name FROM sakila.actor;'
         #load request to the proxy
-        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> /home/ubuntu/request.sql')
+        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
         print('The Output is:', out_read.read())
         #Execute functions_proxy.py code in the proxy with random mode
         commande_random = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
         in_random,out_random,err_random=ssh_proxy.exec_command(commande_random)
         print('The Output is:', out_random.read())
-        in_,out_,err_=ssh_proxy.exec_command("sudo rm request.sql")
+        in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
 
 
     if mode=='customize':
         #-------> Test a read request
-        request_read = input("Plese give me the request you want to send (Read request)")
+        request_read = input("Please give me the request you want to send (Read request)")
         #request_read='SELECT first_name, last_name FROM sakila.actor;'
         #load request to the proxy
-        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> /home/ubuntu/request.sql')
+        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
         print('The Output is:', out_read.read())
         #Execute functions_proxy.py code in the proxy with customize mode
         commande_custom = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
         in_custom,out_custom,err_custom=ssh_proxy.exec_command(commande_custom)
         print('The Output is:', out_custom.read())
-        in_,out_,err_=ssh_proxy.exec_command("sudo rm request.sql")
+        in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
 
     # Ask if you keep testing or not
     KeepGoing = input("Do you want to keep the tests ? YES or NO?").upper()

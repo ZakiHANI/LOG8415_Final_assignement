@@ -17,12 +17,12 @@ def proxy_direct_hit(publicIpAddress_master,request):
     key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_master.connect(hostname=publicIpAddress_master,username='ubuntu', pkey=key_private_master)
     #Send the request to the master
-    in1,out1,err1=ssh_master.exec_command("sudo echo '" + str(request) + "' >> requests.sql" )
-    in2,out2,err2=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < requests.sql")
+    in1,out1,err1=ssh_master.exec_command("sudo echo '" + str(request) + "' >> received_request.sql" )
+    in2,out2,err2=ssh_master.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -u root < received_request.sql")
     #Print the Output
     print ('The output is:',out2.read())
-    #Remove requests.sql
-    in3,out3,err3=ssh_master.exec_command("sudo rm requests.sql")
+    #Remove received_request.sql
+    in3,out3,err3=ssh_master.exec_command("sudo rm received_request.sql")
 
 
 #Create the function that implement the proxy mode <Random>
@@ -42,12 +42,12 @@ def proxy_random(dict_slaves_publicIpAddress,request,publicIpAddress_master):
     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_slave.connect(hostname=PublicIpAddress_chosen,username='ubuntu', pkey=key_private_slave)
     #Send the request to the chosen slave
-    in1,out1,err1=ssh_slave.exec_command("sudo echo '" + str(request) + "' >> requests.sql" )
-    in2,out2,err2=ssh_slave.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < requests.sql")
+    in1,out1,err1=ssh_slave.exec_command("sudo echo '" + str(request) + "' >> received_request.sql" )
+    in2,out2,err2=ssh_slave.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
     #Print the Output
     print ('The output is:',out2.read())
-    #Remove requests.sql
-    in3,out3,err3=ssh_slave.exec_command("sudo rm requests.sql")
+    #Remove received_request.sql
+    in3,out3,err3=ssh_slave.exec_command("sudo rm received_request.sql")
 
 #Create the function that implement the proxy mode <Customize>
 #The idea is that we send a read request to the proxy and it will ping all the nodes and measure the ping time of each one ,
@@ -65,12 +65,12 @@ def proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master):
     key_private_selected_node = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_selected_node.connect(hostname=dict_nodes_publicIpAddress[Best_node],username='ubuntu', pkey=key_private_selected_node)
     #Send the request to the selected node 
-    in1,out1,err1=ssh_selected_node.exec_command("sudo echo '" + str(request) + "' >> requests.sql" )
-    in2,out2,err2=ssh_selected_node.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < requests.sql")
+    in1,out1,err1=ssh_selected_node.exec_command("sudo echo '" + str(request) + "' >> received_request.sql" )
+    in2,out2,err2=ssh_selected_node.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
     #Print the Output
     print ('The output is:',out2.read())
-    #Remove requests.sql
-    in3,out3,err3=ssh_selected_node.exec_command("sudo rm requests.sql")
+    #Remove received_request.sql
+    in3,out3,err3=ssh_selected_node.exec_command("sudo rm received_request.sql")
 
 #Read the proxy mode given in the SSH command
 mode = sys.argv[1]
