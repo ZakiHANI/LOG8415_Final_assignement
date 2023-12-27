@@ -49,8 +49,7 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
         VpcId=vpc_id).id
     
     Security_group=resource.SecurityGroup(Security_group_ID)
-    
-    #Add an inbounded allowing inbounded traffics of tcp protocol, and ports 22,80,5000,5001, and all Ipranges.  
+     
     Security_group.authorize_ingress(
          IpPermissions=[
             {'FromPort':22,
@@ -58,20 +57,30 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
              'IpProtocol':'tcp',
              'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
             },
-            {'FromPort':80,
-             'ToPort':80,
+            {'FromPort':1433,
+             'ToPort':1433,
              'IpProtocol':'tcp',
              'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
-            },
-            {'FromPort':5000,
-             'ToPort':5000,
+            }
+            ]
+    ) 
+    return Security_group_ID
+
+# This is a function that creates a security group:  
+def create_security_group_gate_keeper(Description,Groupe_name,vpc_id,resource,allowed_ip_ranges):
+    Security_group_ID=resource.create_security_group(
+        Description=Description,
+        GroupName=Groupe_name,
+        VpcId=vpc_id).id
+    
+    Security_group=resource.SecurityGroup(Security_group_ID)
+     
+    Security_group.authorize_ingress(
+         IpPermissions=[
+            {'FromPort':22,
+             'ToPort':22,
              'IpProtocol':'tcp',
-             'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
-            },
-            {'FromPort':5001,
-             'ToPort':5001,
-             'IpProtocol':'tcp',
-             'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
+             'IpRanges':[{'CidrIp':allowed_ip_ranges}]
             }
             ]
     ) 
