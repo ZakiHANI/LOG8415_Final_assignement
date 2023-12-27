@@ -75,7 +75,7 @@ def proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master):
 #Read the proxy mode given in the SSH command
 mode = sys.argv[1]
 #Reading the request
-request = open('/home/ubuntu/request.sql', mode="r", encoding="utf-8").readlines()[0]  
+request = open('received_request.sql', mode="r", encoding="utf-8").readlines()[0]  
 
 publicIpAddress_master='172.31.24.243'
 dict_slaves_publicIpAddress={'slave-1':'172.31.30.207','slave-2':'172.31.23.68','slave-3':'172.31.24.170'}
