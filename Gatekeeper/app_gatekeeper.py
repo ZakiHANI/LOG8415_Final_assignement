@@ -20,7 +20,9 @@ else :
     ssh_trusted_host.connect(hostname=publicIpAddress_trusted_host,username='ubuntu', pkey=key_private_trusted_host)
     #Send the request to the trusted_host
     in1,out1,err1=ssh_trusted_host.exec_command('sudo echo ' + "'" + str(request) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
+
     print('-----> Request forwarded to trusted host')
+    
     commande = f'python3 LOG8415_Final_assignement/Gatekeeper/app_trusted_host.py {mode}'
     in2,out2,err2=ssh_trusted_host.exec_command(commande)
     print(out2.read())
