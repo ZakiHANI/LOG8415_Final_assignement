@@ -57,8 +57,8 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
              'IpProtocol':'tcp',
              'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
             },
-            {'FromPort':1433,
-             'ToPort':1433,
+            {'FromPort':3306,
+             'ToPort':3306,
              'IpProtocol':'tcp',
              'IpRanges':[{'CidrIp':'0.0.0.0/0'}]
             }
@@ -66,8 +66,8 @@ def create_security_group(Description,Groupe_name,vpc_id,resource):
     ) 
     return Security_group_ID
 
-# This is a function that creates a security group:  
-def create_security_group_gate_keeper(Description,Groupe_name,vpc_id,resource,allowed_ip_ranges):
+# This is a function that creates a specific security group for the trusted host  
+def create_security_group_trusted_host(Description,Groupe_name,vpc_id,resource,allowed_ip_addresses):
     Security_group_ID=resource.create_security_group(
         Description=Description,
         GroupName=Groupe_name,
@@ -80,7 +80,7 @@ def create_security_group_gate_keeper(Description,Groupe_name,vpc_id,resource,al
             {'FromPort':22,
              'ToPort':22,
              'IpProtocol':'tcp',
-             'IpRanges':[{'CidrIp':allowed_ip_ranges}]
+             'IpRanges':[{'CidrIp':allowed_ip_addresses}]
             }
             ]
     ) 

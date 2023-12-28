@@ -17,7 +17,9 @@ key_private_proxy = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
 ssh_proxy.connect(hostname=publicIpAddress_proxy,username='ubuntu', pkey=key_private_proxy)
 #Send the request to the trusted_host
 in1,out1,err1=ssh_proxy.exec_command('sudo echo ' + "'" + str(request) + "'" + ' >> received_request.sql')
+
 print('-----> Request forwarded to proxy')
+
 commande = f'python3 LOG8415_Final_assignement/Proxy/app_proxy.py {mode}'
 in2,out2,err2=ssh_proxy.exec_command(commande)
 print(out2.read())

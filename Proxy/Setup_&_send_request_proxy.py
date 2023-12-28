@@ -83,6 +83,8 @@ print("\n Creating instance : Proxy ")
 Proxy_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_id,['us-east-1a'],"proxy",'')
 print("\n Proxy created successfully")
 
+print('============================>The end of proxy setup')
+
 #--------------------------------------Send requests to Proxy  ------------------------------------------------------------
 
 #Get publicIPAdress of proxy

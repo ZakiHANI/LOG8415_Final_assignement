@@ -17,10 +17,7 @@ with open(path+"/my_credentials.ini","r") as file_object:
     ami_id = config_object.get("ami","ami_id")
 
 
-print('============================>The begining of Gatekeeper setup')
-
-#Set allowed ip_addresses_ranges_to communicate with gatekeeper (to use in gatekeeper security group )
-allowed_ip_ranges='x.x.x.x/x'
+print('============================>The begining of Gatekeeper and trusted host setup')
 
 #--------------------------------------ec2 resource and client creations----------------------------------------
     
@@ -50,9 +47,11 @@ vpc_id = default_vpc_desc[0].get('VpcId')
 
 
 #--------------------------------------Create a security groups for gatekeepr and trusted host--------------------------------
+#Set allowed ip_addresses to communicate with trusted host (just proxy and gatekeeper)
+allowed_ip_addresses=[PublicIPAddresses_proxy,PublicIPAddresses_gatekeeper]
 
-security_group_getkeeper_id = create_security_group_gate_keeper("sec_group","gatekeeper_security_group",vpc_id,ec2_serviceresource,allowed_ip_ranges)  
-security_group_trusted_host_id = create_security_group("sec_group","final_security_group",vpc_id,ec2_serviceresource)  
+security_group_getkeeper_id = create_security_group("sec_group","final_security_group",vpc_id,ec2_serviceresource)  
+security_group_trusted_host_id = create_security_group("sec_group","trusted_host_security_group",vpc_id,ec2_serviceresource,allowed_ip_addresses)  
 
 #--------------------------------------Create Instance of Gatekeeper and trusted host ------------------------------------------------------------
 
@@ -63,9 +62,13 @@ print("\n Creating instance : Gatekeeper ")
 # Creation of the Gatkeeper
 Gatekeeper_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_getkeeper_id,['us-east-1a'],"Gatekeeper",'')
 print("\n Gatekeeper created successfully")
-# Creation of the Gatkeeper
+
+print("\n Creating instance : Trusted host ")
+# Creation of the Trusted host
 Trusted_host_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_trusted_host_id,['us-east-1a'],"Trusted_host",'')
 print("\n Trusted host created successfully")
+
+print('============================>The end of Gatekeeper and trusted host setup')
 
 #--------------------------------------Send requests to Gatekeeper  ------------------------------------------------------------
 
