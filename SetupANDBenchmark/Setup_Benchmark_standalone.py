@@ -21,7 +21,7 @@ if __name__ == '__main__':
         ami_id = config_object.get("ami","ami_id")
 
 
-    print('============================>The begining of setup')
+    print('============================>The begining of standalone setup')
 
     #--------------------------------------ec2 resource and client creations----------------------------------------
     
@@ -87,6 +87,10 @@ if __name__ == '__main__':
     standalone_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_id,['us-east-1a'],"standalone",'')
     print("\n standalone created successfully")
 
+    print('============================>The end of standalone setup')
+
+    print('============================>Installing sysbench,mysql and sakila on standalone')
+
     #--------------------------------------Installing sysbench,mysql and sakila on standalone ------------------------------------------------------------
 
     #Create an SSH connection to standalone to send commands
@@ -95,33 +99,30 @@ if __name__ == '__main__':
     ssh_standalone.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_standalone = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_standalone.connect(hostname=publicIpAddress_standalone,username='ubuntu', pkey=key_private_standalone)
-    
-    # in_,out_,err_=ssh_standalone.exec_command('sudo git clone https://github.com/ZakiHANI/LOG8415_Final_assignement.git ')
-    # print('out_:', out_.read())
-    # print('err_:', err_.read())
-
-    # in_,out_,err_=ssh_standalone.exec_command('sudo bash LOG8415_Final_assignement/Setup/sysbench_mysql_sakila_standalone.sh')
-    # print('out_:', out_.read())
-    # print('err_:', err_.read())
-
 
     #Update
     in1,out1,err1=ssh_standalone.exec_command('sudo apt-get update -y')
     #Install mysql server
-    in2,out2,err2=ssh_standalone.exec_command('export DEBIAN_FRONTEND=noninteractive && sudo apt-get install mysql-server -y')
+    in2,out2,err2=ssh_standalone.exec_command('sudo apt-get install mysql-server -y')
     #Install sysbench
-    in3,out3,err3=ssh_standalone.exec_command('export DEBIAN_FRONTEND=noninteractive && sudo apt-get install sysbench -y')
+    in3,out3,err3=ssh_standalone.exec_command('sudo apt-get install sysbench -y')
     #Get and install sakila
     in4,out4,err4=ssh_standalone.exec_command('sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz && sudo  tar xvf sakila-db.tar.gz')
     in5,out5,err5=ssh_standalone.exec_command('sudo mysql -u root -e "SOURCE sakila-db/sakila-schema.sql;"')
     in6,out6,err6=ssh_standalone.exec_command('sudo mysql -u root -e "SOURCE sakila-db/sakila-data.sql;"')
+
+    print('============================>End of installation of sysbench,mysql and sakila on standalone')
 
     #--------------------------------------Benchmarking of standalone using sysbench ------------------------------------------------------------
 
     #Creating a user and grant him all privileges on sakila 
     in7,out7,err7=ssh_standalone.exec_command('sudo mysql -e "CREATE USER \'ZAKARIA\'@\'localhost\' IDENTIFIED BY \'FINALPROJECT\';"')
     in8,out8,err8=ssh_standalone.exec_command('sudo mysql -e "GRANT ALL PRIVILEGES ON sakila.* TO \'ZAKARIA\'@\'localhost\';"')
+
+    print('============================>Begining of standalone benchmark')
+
     #Using the user to do sysbench benchmark preparation and run
     in9,out9,err9=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=25000 --tables=8 /usr/share/sysbench/oltp_read_write.lua prepare')
     in10,out10,err10=ssh_standalone.exec_command('timr sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=25000 --tables=8 --threads=11 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run')
     
+    print('============================>End of standalone benchmark')
