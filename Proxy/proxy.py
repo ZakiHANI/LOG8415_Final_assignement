@@ -11,7 +11,7 @@ from ping3 import ping
 def proxy_direct_hit(publicIpAddress_master,request):
     'The function takes as arguments the publicIpAddress_master and the sent request'
         
-    #Create a SSH connection to the master using its chosen PublicIpAddress
+    #Create a SSH connection to the master using its PublicIpAddress
     ssh_master = paramiko.SSHClient()
     ssh_master.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_master = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
@@ -32,18 +32,19 @@ def proxy_random(dict_slaves_publicIpAddress,request,publicIpAddress_master):
     'The function takes as arguments a dictianry (keys=slaves names and values=slaves publicIpAddresses),' 
     'the sent request and the publicIpAddress of the master'
 
-    #Choice of a randome slave from list of slaves (dictionary keys)
+    #Choice of a random slave from list of slaves (dictionary keys)
     chosen_slave=random.choice(dict_slaves_publicIpAddress.keys())
     print('The randomly chosen slave is :',chosen_slave)
     PublicIpAddress_chosen=dict_slaves_publicIpAddress[chosen_slave]
-    #Create a SSH connection to the chosen slave using its chosen PublicIpAddress
+    #Create a SSH connection to the chosen slave using its PublicIpAddress
     ssh_slave = paramiko.SSHClient()
     ssh_slave.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_private_slave = paramiko.RSAKey.from_private_key_file('final_keypair.pem')
     ssh_slave.connect(hostname=PublicIpAddress_chosen,username='ubuntu', pkey=key_private_slave)
     #Send the request to the chosen slave
     in1,out1,err1=ssh_slave.exec_command("sudo echo '" + str(request) + "' >> received_request.sql" )
-    in2,out2,err2=ssh_slave.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
+    in2,out2,err2=ssh_slave.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+
+                                         ".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
     #Print the Output
     print ('The output is:',out2.read())
     #Remove received_request.sql
@@ -66,7 +67,8 @@ def proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master):
     ssh_selected_node.connect(hostname=dict_nodes_publicIpAddress[Best_node],username='ubuntu', pkey=key_private_selected_node)
     #Send the request to the selected node 
     in1,out1,err1=ssh_selected_node.exec_command("sudo echo '" + str(request) + "' >> received_request.sql" )
-    in2,out2,err2=ssh_selected_node.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')+".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
+    in2,out2,err2=ssh_selected_node.exec_command("sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -h ec2-"+str(publicIpAddress_master).replace('.','-')
+                                                 +".compute-1.amazonaws.com -u ZAKARIA < received_request.sql")
     #Print the Output
     print ('The output is:',out2.read())
     #Remove received_request.sql
