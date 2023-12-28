@@ -4,9 +4,6 @@ from functions import *
 import paramiko
 import base64
 import os
-import json
-from threading import Thread
-import re
 
 if __name__ == '__main__':
     # Get credentials from the config file :
@@ -121,8 +118,13 @@ if __name__ == '__main__':
 
     print('============================>Begining of standalone benchmark')
 
-    #Using the user to do sysbench benchmark preparation and run
-    in9,out9,err9=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=25000 --tables=8 /usr/share/sysbench/oltp_read_write.lua prepare')
-    in10,out10,err10=ssh_standalone.exec_command('timr sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=25000 --tables=8 --threads=11 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run')
-    
+    #Prepare sysbench benchmark 
+    in9,out9,err9=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=40000 --tables=8 /usr/share/sysbench/oltp_read_write.lua prepare')
+    #Run sysbench benchmark 
+    in10,out10,err10=ssh_standalone.exec_command('time sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT --table-size=40000 --tables=8 --threads=11 --max-time=20 /usr/share/sysbench/oltp_read_write.lua run')
+    print('Sysbench output:',out10.read())
+    #Cleanup sysbench benchmark 
+    in11,out11,err11=ssh_standalone.exec_command('sudo sysbench --db-driver=mysql --mysql-db=sakila --mysql-user=ZAKARIA --mysql_password=FINALPROJECT  /usr/share/sysbench/oltp_read_write.lua cleanup')
+
+
     print('============================>End of standalone benchmark')
