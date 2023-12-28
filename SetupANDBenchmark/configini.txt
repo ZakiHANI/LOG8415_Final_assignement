@@ -9,17 +9,14 @@ datadir=/opt/mysqlcluster/deploy/ndb_data
 
 [ndbd]
 hostname=ip-172-31-30-207.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
 nodeid=3
 
 [ndbd]
 hostname=ip-172-31-23-68.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
 nodeid=4
 
 [ndbd]
 hostname=ip-172-31-24-170.ec2.internal
-datadir=/opt/mysqlcluster/deploy/ndb_data
 nodeid=5
 
 [mysqld]
