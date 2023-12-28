@@ -128,9 +128,9 @@ def create_instance_ec2(num_instances,ami_id,
     return instances
 
 #Function to automatically update the ip addresses of msater and slaves in the mysql_config-master.sh file
-def ubdate_ip_addresss_master(master_config_file,nmbr_line,new_line):
+def ubdate_config_file(config_file,nmbr_line,new_line):
     try:
-        with open(master_config_file, 'r') as f:
+        with open(config_file, 'r') as f:
             lines = f.readlines()
 
         if 1 <= nmbr_line <= len(lines):
@@ -138,26 +138,10 @@ def ubdate_ip_addresss_master(master_config_file,nmbr_line,new_line):
             lines[nmbr_line] = new_line
             
             # Write the modified content back to the file
-            with open(master_config_file, 'w') as f:
+            with open(config_file, 'w') as f:
                 f.writelines(lines)
 
     except Exception as e:
         print(f"Error: {str(e)}")
 
-    # # with fileinput.FileInput(master_config_file, inplace=True) as f:
-    # #         for i, ligne in enumerate(f, start=1):
-    # #             for j in line_numbers:
-    # #                 if i == 5:
-    # #                 print(nouvelle_valeur)
-    # #             else:
-    # #                 print(ligne, end='')
-    
-    # with open(master_config_file,"r") as f:
-    #         config_lines=f.readlines()
-    # for i in range(len(line_numbers)):
-    #     config_lines[line_numbers[i]]=new_lines[i]+'\n'
-    #     #config_lines.insert(line_numbers[i],new_lines[i])
-    
-    # with open(master_config_file, 'w') as f:
-    #     f.writelines(config_lines)
 
