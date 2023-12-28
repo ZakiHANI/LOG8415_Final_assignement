@@ -75,7 +75,7 @@ except :
 
 #--------------------------------------Create Instance of PROXY  ------------------------------------------------------------
 
-# Create standalone t2.large instance:
+# Create proxy t2.large instance:
 instance_type = "t2.large"
     
 print("\n Creating instance : Proxy ")
@@ -105,10 +105,10 @@ while True:
         request_write = input("Please give me the request you want to send (Write request)")
         #request_write='INSERT INTO sakila.film (title, release_year, rental_rate) VALUES (Oppenheimer,2023,3.7);'
         #load request to the proxy
-        in_write,out_write,err_write=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_write) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
+        in_write,out_write,err_write=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_write) + "'" + ' >> received_request.sql')
         print('The Output is:', out_write.read())
         #Execute functions_proxy.py code in the proxy with direct_hit mode
-        commande_direct_hit = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
+        commande_direct_hit = f'python3 LOG8415_Final_assignement/Proxy/proxy.py {mode}'
         in_dir,out_dir,err_dir=ssh_proxy.exec_command(commande_direct_hit)
         print('The Output is:', out_dir.read())
         in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
@@ -118,10 +118,10 @@ while True:
         request_read = input("Please give me the request you want to send (Read request)")
         #request_read='SELECT first_name, last_name FROM sakila.actor;'
         #load request to the proxy
-        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
+        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> received_request.sql')
         print('The Output is:', out_read.read())
         #Execute functions_proxy.py code in the proxy with random mode
-        commande_random = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
+        commande_random = f'python3 LOG8415_Final_assignement/Proxy/proxy.py {mode}'
         in_random,out_random,err_random=ssh_proxy.exec_command(commande_random)
         print('The Output is:', out_random.read())
         in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
@@ -132,10 +132,10 @@ while True:
         request_read = input("Please give me the request you want to send (Read request)")
         #request_read='SELECT first_name, last_name FROM sakila.actor;'
         #load request to the proxy
-        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> LOG8415_Final_assignement/received_request.sql')
+        in_read,out_read,err_read=ssh_proxy.exec_command('sudo echo ' + "'" + str(request_read) + "'" + ' >> received_request.sql')
         print('The Output is:', out_read.read())
         #Execute functions_proxy.py code in the proxy with customize mode
-        commande_custom = f'python3 LOG8415_Final_assignement/Proxy/functions_proxy.py {mode}'
+        commande_custom = f'python3 LOG8415_Final_assignement/Proxy/proxy.py {mode}'
         in_custom,out_custom,err_custom=ssh_proxy.exec_command(commande_custom)
         print('The Output is:', out_custom.read())
         in_,out_,err_=ssh_proxy.exec_command("sudo rm received_request.sql")
