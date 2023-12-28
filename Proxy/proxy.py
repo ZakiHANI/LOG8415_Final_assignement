@@ -4,6 +4,7 @@ import paramiko
 import random
 import time
 from ping3 import ping
+from ..SetupANDBenchmark.Setup_Benchmark_cluster import publicIpAddress_master,publicIpAddress_slave_1, publicIpAddress_slave_2,publicIpAddress_slave_3
 
 #Create the function that implement the proxy mode <Direct hit>
 #The idea is that we send a write request to the proxy and it will forword it to the master
@@ -77,11 +78,10 @@ def proxy_customize(dict_nodes_publicIpAddress,request,publicIpAddress_master):
 #Read the proxy mode given in the SSH command
 mode = sys.argv[1]
 #Reading the request
-request = open('received_request.sql', mode="r", encoding="utf-8").readlines()[0]  
+request = open('received_request.sql', mode="r", encoding="utf-8").readlines()[0] 
 
-publicIpAddress_master='172.31.24.243'
-dict_slaves_publicIpAddress={'slave-1':'172.31.30.207','slave-2':'172.31.23.68','slave-3':'172.31.24.170'}
-dict_nodes_publicIpAddress={'master':'172.31.24.243','slave-1':'172.31.30.207','slave-2':'172.31.23.68','slave-3':'172.31.24.170'}
+dict_slaves_publicIpAddress={'slave-1':publicIpAddress_slave_1,'slave-2':publicIpAddress_slave_2,'slave-3':publicIpAddress_slave_3}
+dict_nodes_publicIpAddress={'master':publicIpAddress_master,'slave-1':publicIpAddress_slave_1,'slave-2':publicIpAddress_slave_2,'slave-3':publicIpAddress_slave_3}
 
 #execute the function of direct hit if we want to test the direct hit mode
 if mode=='direct hit':

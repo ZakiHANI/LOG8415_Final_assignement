@@ -4,6 +4,7 @@ import paramiko
 import base64
 import os
 from ..SetupANDBenchmark.functions import *
+from ..Proxy.SetupANDsend_request_proxy import publicIpAddress_proxy
 
 # Get credentials from the config file :
 path = os.path.dirname(os.getcwd())
@@ -46,14 +47,11 @@ default_vpc_desc = default_vpc.get("Vpcs")
 vpc_id = default_vpc_desc[0].get('VpcId')
 
 
-#--------------------------------------Create a security groups for gatekeepr and trusted host--------------------------------
-#Set allowed ip_addresses to communicate with trusted host (just proxy and gatekeeper)
-allowed_ip_addresses=[PublicIPAddresses_proxy,PublicIPAddresses_gatekeeper]
-
+#--------------------------------------Create a security group for gatekeepr --------------------------------
 security_group_getkeeper_id = create_security_group("sec_group","final_security_group",vpc_id,ec2_serviceresource)  
 security_group_trusted_host_id = create_security_group("sec_group","trusted_host_security_group",vpc_id,ec2_serviceresource,allowed_ip_addresses)  
 
-#--------------------------------------Create Instance of Gatekeeper and trusted host ------------------------------------------------------------
+#--------------------------------------Create Instance of Gatekeeper ------------------------------------------------------------
 
 # Create standalone t2.large instance:
 instance_type = "t2.large"
@@ -63,8 +61,16 @@ print("\n Creating instance : Gatekeeper ")
 Gatekeeper_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_getkeeper_id,['us-east-1a'],"Gatekeeper",'')
 print("\n Gatekeeper created successfully")
 
+#--------------------------------------Create a specific security group for trusted host --------------------------------
+#Get publicIPAdress of Gatekeeper
+publicIpAddress_gatekeeper=Gatekeeper_t2[0][3]
+#Set allowed ip_addresses to communicate with trusted host (just proxy and gatekeeper)
+allowed_ip_addresses=[publicIpAddress_proxy,publicIpAddress_gatekeeper]
+
+#--------------------------------------Create Instance of Gatekeeper ------------------------------------------------------------
 print("\n Creating instance : Trusted host ")
 # Creation of the Trusted host
+
 Trusted_host_t2= create_instance_ec2(1,ami_id, instance_type,key_pair_name,ec2_serviceresource,security_group_trusted_host_id,['us-east-1a'],"Trusted_host",'')
 print("\n Trusted host created successfully")
 
@@ -72,8 +78,7 @@ print('============================>The end of Gatekeeper and trusted host setup
 
 #--------------------------------------Send requests to Gatekeeper  ------------------------------------------------------------
 
-#Get publicIPAdress of Gatekeeper
-publicIpAddress_gatekeeper=Gatekeeper_t2[0][3]
+
 #Create SSH connection with Gatekeeper
 ssh_gatekeeper = paramiko.SSHClient()
 ssh_gatekeeper.set_missing_host_key_policy(paramiko.AutoAddPolicy())

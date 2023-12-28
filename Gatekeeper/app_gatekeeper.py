@@ -1,6 +1,7 @@
 import sys
 import boto3
 import paramiko
+from SetupANDsend_request_gatekeeper import publicIpAddress_trusted_host
 
 
 #Read the proxy mode given in the SSH command
@@ -8,7 +9,7 @@ mode = sys.argv[1]
 #Reading the request
 request = open('LOG8415_Final_assignement/received_request.sql', mode="r", encoding="utf-8").readlines()[0] 
 
-publicIpAddress_trusted_host='172.31.10.240'
+
 if 'SELECT *' or ('UPDATE' and 'payment') or ('INSERT' and 'customer') or ('INSERT' and 'payment') in str(request):
     print('access denied')
 else :
