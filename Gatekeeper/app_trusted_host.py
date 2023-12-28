@@ -19,7 +19,7 @@ in1,out1,err1=ssh_proxy.exec_command('sudo echo ' + "'" + str(request) + "'" + '
 
 print('-----> Request forwarded to proxy')
 
-commande = f'python3 LOG8415_Final_assignement/Proxy/app_proxy.py {mode}'
+commande = f'python3 LOG8415_Final_assignement/Proxy/proxy.py {mode}'
 in2,out2,err2=ssh_proxy.exec_command(commande)
 print('The output is:',out2.read())
 in3,out3,err3=ssh_proxy.exec_command("sudo rm received_request.sql")
