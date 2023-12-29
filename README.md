@@ -1,4 +1,4 @@
-This repository is for LOG8415E final assignment (Scaling Databases and Implementing Cloud Design Patterns) edited by ZAKARIA HANIRI : 
+This repository is for LOG8415E final assignment (Scaling Databases and Implementing Cloud Design Patterns) edited by ZAKARIA HANIRI.
 
 To run the code, you need to:
 - Have already installed python 3 or above.
