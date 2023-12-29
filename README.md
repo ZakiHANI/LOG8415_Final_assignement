@@ -1,4 +1,4 @@
-This repository is for LOG8415E final assignement edited by ZAKARIA HANIRI.
+This repository is for LOG8415E final assignment edited by ZAKARIA HANIRI.
 
 To run the code, you need to:
 - Have already installed python 3 or above.
