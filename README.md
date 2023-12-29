@@ -1,9 +1,9 @@
 This repository is for LOG8415E final assignment (Scaling Databases and Implementing Cloud Design Patterns) edited by ZAKARIA HANIRI.
 
 To run the code, you need to:
-- Have already installed python 3 or above.
-- Have already upgraded pip.
-- Have already an AWS account ( It is necessary to have your credentials: access_key_id,secret_access_key,session_token)
+- Install python 3 or above before.
+- Upgrade pip before.
+- Have an AWS account before ( It is necessary to have your credentials: access_key_id,secret_access_key,session_token)
 - Once you have all of this, you have to copy past your credentials in the script.sh file
 - Then you will run the code Setup_Benchmark_standalone.py in which you will create the
 stand-alone ec2 instance, install mysql, sakila database and sysbench in it, then perform the
