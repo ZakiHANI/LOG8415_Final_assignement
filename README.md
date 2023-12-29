@@ -22,4 +22,4 @@ ec2 instances of gatekeeper and trusted host, then specify and send your SQL req
 gatekeeper with giving it the proxy mode (direct hit, random, customize) in order to check
 and validate it, and then if it is authorized, it will redirect it to the trusted host with the
 given proxy mode . Once the trusted host receives it, it will send it to the proxy with the
-givent proxy mode ..
+givent proxy mode .
