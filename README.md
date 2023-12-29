@@ -17,7 +17,7 @@ sysbench benchmark of the cluster.
 instance of the proxy, and specify and send your SQL requests to the proxy with giving it the
 proxy mode (direct hit, random, customize) in order to route your request to the appropriate
 cluster node depending on the specified mode.
-- Then you will run the code SetupANDsend_request_gatekeeper.py in which you will reate 2
+- Then you will run the code SetupANDsend_request_gatekeeper.py in which you will create 2
 ec2 instances of gatekeeper and trusted host, then specify and send your SQL requests to the
 gatekeeper with giving it the proxy mode (direct hit, random, customize) in order to check
 and validate it, and then if it is authorized, it will redirect it to the trusted host with the
